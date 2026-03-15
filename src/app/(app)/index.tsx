@@ -1,28 +1,57 @@
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { useAuthStore } from '../../store/authStore';
+import { View, Text, StyleSheet, ScrollView, Image } from 'react-native';
+import { DashboardSumaryCard } from '../../components/DashboardSumaryCard';
 
 export default function Dashboard() {
-  const { logout } = useAuthStore();
-
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Bem-vindo ao Painel</Text>
-      <Text style={styles.subtitle}>Lar São Francisco - Administrador</Text>
+    <ScrollView contentContainerStyle={styles.scrollContent}>
+      <View style={styles.container}>
+        <View style={styles.painelHeader}>
+          <Image
+            source={require('@/assets/logo.png')}
+            style={styles.logo}
+          />
+          <Text style={styles.title}>Dashboard</Text>
+        </View>
 
-      <TouchableOpacity style={styles.logoutButton} onPress={logout}>
-        <Text style={styles.logoutText}>Sair</Text>
-      </TouchableOpacity>
-    </View>
+        <View style={styles.sumaryContainer}>
+          <DashboardSumaryCard 
+            label='Doações recebidas'
+            value={'R$ 1564,70'}
+          />
+          <DashboardSumaryCard 
+            label='Doadores'
+            value={'16'}
+          />
+          <DashboardSumaryCard 
+            label='Animais cadastrados'
+            value={'47'}
+          />
+          
+        </View>
+      </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
+  scrollContent: {
+    backgroundColor: '#f0efdb',
+    flexGrow: 1,
+    justifyContent: 'center',
+    padding: 20,
+  },
+  painelHeader: {
+    alignItems: 'center'
+  },
+  logo: {
+    width: 300,
+    height: 160,
+    resizeMode: 'contain',
+  },
   container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',        
-    backgroundColor: '#f8f9fa',
-    padding: 20,
   },
   title: {
     fontSize: 24,
@@ -46,4 +75,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 16,
   },
+  sumaryContainer: {
+    width: '100%',
+    marginTop: 32,
+  }
 });
