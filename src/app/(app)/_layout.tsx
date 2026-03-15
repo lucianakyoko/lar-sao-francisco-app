@@ -22,18 +22,21 @@ export default function AppLayout() {
         headerShown: false,
         tabBarStyle: {
           height: 70,
-          paddingBottom: 10,
-          paddingTop: 10,
+          paddingLeft:20,
+          paddingRight:10,
           backgroundColor: "#f2f2f2",
         },
         tabBarLabelStyle: {
-          fontSize: 14,
+          fontSize: 12,          
+          width: 200,
         },
-        tabBarActiveTintColor: "#000",
-        tabBarInactiveTintColor: "#444",
+        tabBarActiveTintColor: "#2B9EED",
+        tabBarInactiveTintColor: "#8f8e8e",
         tabBarItemStyle: {
+          width: 200,
           borderRadius: 16,
           marginHorizontal: 6,
+          padding: 10,
         },
       }}
     >
@@ -44,29 +47,26 @@ export default function AppLayout() {
           tabBarIcon: ({ color, size, focused }) => (
             <Ionicons name="home" size={22} color={color} />
           ),
-          tabBarActiveBackgroundColor: "#d7c8e3",
         }}
       />
 
       <Tabs.Screen
-        name="donations"
+        name="donations/index"
         options={{
           title: "Doações",
           tabBarIcon: ({ color }) => (
             <Ionicons name="cash" size={22} color={color} />
           ),
-          tabBarActiveBackgroundColor: "#d7c8e3",
         }}
       />
 
       <Tabs.Screen
-        name="animals"
+        name="animals/index"
         options={{
           title: "Animais",
           tabBarIcon: ({ color }) => (
             <Ionicons name="paw" size={22} color={color} />
           ),
-          tabBarActiveBackgroundColor: "#d7c8e3",
         }}
       />
 
@@ -81,13 +81,11 @@ export default function AppLayout() {
         }}
         listeners={{
           tabPress: (e) => {
-            e.preventDefault(); // impede navegação
-            logout(); // executa logout
+            e.preventDefault();
+            logout();
           },
         }}
       />
     </Tabs>
-
-    
   );
 }
