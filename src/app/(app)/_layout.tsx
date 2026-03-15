@@ -6,7 +6,7 @@ import * as NavigationBar from "expo-navigation-bar";
 import { useEffect } from "react";
 
 export default function AppLayout() {
-  const { isAuthenticated } = useAuthStore();
+  const { isAuthenticated, logout  } = useAuthStore();
 
   useEffect(() => {
     NavigationBar.setVisibilityAsync("hidden");
@@ -69,6 +69,25 @@ export default function AppLayout() {
           tabBarActiveBackgroundColor: "#d7c8e3",
         }}
       />
+
+      <Tabs.Screen
+        name="logout"
+        options={{
+          title: "Sair",
+          tabBarIcon: ({ color }) => (
+            <Ionicons name="log-out-outline" size={22} color={color} />
+          ),
+          tabBarActiveBackgroundColor: "#d7c8e3",
+        }}
+        listeners={{
+          tabPress: (e) => {
+            e.preventDefault(); // impede navegação
+            logout(); // executa logout
+          },
+        }}
+      />
     </Tabs>
+
+    
   );
 }
