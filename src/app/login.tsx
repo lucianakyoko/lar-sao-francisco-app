@@ -10,14 +10,14 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  Image,
 } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import * as z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useAuthStore } from '../store/authStore';
 import api from '../lib/api';
-import { LoginDto } from '../types';
-
+import { router } from 'expo-router';
 
 
 const loginSchema = z.object({
@@ -46,16 +46,19 @@ export default function LoginScreen() {
   const onSubmit = async (data: LoginForm) => {
     setIsLoading(true);
     try {
-      const response = await api.post<LoginDto, { data: { access_token: string } }>(
-        '/auth/login',
-        data
-      );
+      const response = await api.post('/auth/login', data);
+      const accessToken = response.data.access_token;
 
-      await login(response.data.access_token);
-      // O layout protegido vai redirecionar automaticamente
+      if (accessToken) {
+        await login(accessToken);
+        
+        router.replace('/(app)')
+      } else {
+        Alert.alert('Erro', 'Token não recebido');
+      }
     } catch (error: any) {
-      const message = error.response?.data?.message || 'Erro ao fazer login';
-      Alert.alert('Erro', message);
+      const message = error.response?.data?.message || 'Credenciais inválidas';
+      Alert.alert(message);
     } finally {
       setIsLoading(false);
     }
@@ -68,8 +71,14 @@ export default function LoginScreen() {
     >
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <View style={styles.formContainer}>
-          <Text style={styles.title}>Lar São Francisco</Text>
-          <Text style={styles.subtitle}>Painel Administrativo</Text>
+          <View style={styles.formHeader}>
+            <Image
+              source={require('@/assets/logo.png')}
+              style={styles.logo}
+            />
+            <Text style={styles.title}>Lar São Francisco</Text>
+            <Text style={styles.subtitle}>Painel Administrativo</Text>
+          </View>
 
           <Controller
             control={control}
@@ -107,7 +116,10 @@ export default function LoginScreen() {
             disabled={isLoading}
           >
             {isLoading ? (
-              <ActivityIndicator color="#fff" />
+              <View style={styles.loading}>
+                <Text style={styles.buttonText}>Entrando</Text>
+                <ActivityIndicator color="#fff" />
+              </View>
             ) : (
               <Text style={styles.buttonText}>Entrar</Text>
             )}
@@ -121,22 +133,27 @@ export default function LoginScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f8f9fa',
+    backgroundColor: '#f0efdb',
   },
   scrollContent: {
     flexGrow: 1,
     justifyContent: 'center',
     padding: 20,
   },
+  formHeader: {
+    flex: 1,
+    alignItems: 'center',
+    marginBottom: 120,
+  },
+  logo: {
+    width: '40%',
+    height: '100%',
+    resizeMode: 'contain',
+  },
   formContainer: {
-    backgroundColor: '#fff',
+    backgroundColor: '#f8f9fa',
     borderRadius: 12,
     padding: 24,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 5,
   },
   title: {
     fontSize: 28,
@@ -148,7 +165,6 @@ const styles = StyleSheet.create({
   subtitle: {
     fontSize: 16,
     textAlign: 'center',
-    marginBottom: 32,
     color: '#7f8c8d',
   },
   input: {
@@ -165,7 +181,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   button: {
-    backgroundColor: '#e74c3c',
+    backgroundColor: '#2B9EED',
     padding: 16,
     borderRadius: 8,
     alignItems: 'center',
@@ -176,4 +192,9 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
   },
+  loading: {
+    flex: 1,
+    flexDirection: 'row',
+    gap: 2
+  }
 });
