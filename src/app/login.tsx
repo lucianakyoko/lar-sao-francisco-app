@@ -15,8 +15,8 @@ import {
 import { useForm, Controller } from 'react-hook-form';
 import * as z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useAuthStore } from '../store/authStore';
-import api from '../lib/api';
+import { useAuthStore } from '@/store/authStore';
+import api from '@/lib/api';
 import { router } from 'expo-router';
 
 
@@ -50,9 +50,8 @@ export default function LoginScreen() {
       const accessToken = response.data.access_token;
 
       if (accessToken) {
-        await login(accessToken);
-        
-        router.replace('/(app)')
+        await useAuthStore.getState().login(accessToken);        
+        router.replace('/(app)');
       } else {
         Alert.alert('Erro', 'Token não recebido');
       }

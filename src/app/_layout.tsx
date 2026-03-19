@@ -1,14 +1,33 @@
-import { Stack } from 'expo-router';
+import { Redirect, Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
-import QueryProvider from '../providers/QueryProvider';
-import { loadStoredToken } from '../store/authStore';
+import QueryProvider from '@/providers/QueryProvider';
+import { initializeAuth, useAuthStore } from '@/store/authStore';
+import { ActivityIndicator, Text, View } from 'react-native';
 
 export default function RootLayout() {
+  const { isAuthenticated, isLoading } = useAuthStore();
+
   useEffect(() => {
-    loadStoredToken();
+    initializeAuth();
   }, []);
 
+  if(isLoading) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+          backgroundColor: '#f0efdb'
+        }}
+      >
+        <Text>Carregando...</Text>
+        <ActivityIndicator size="large" color="#2B9EED" />
+      </View>
+    );
+  }
+  
   return (
     <QueryProvider>
       <Stack screenOptions={{ headerShown: false }}>
@@ -16,6 +35,8 @@ export default function RootLayout() {
         <Stack.Screen name="(app)" options={{ headerShown: false }} />
       </Stack>
       <StatusBar style="auto" />
+
+      {!isAuthenticated && <Redirect href="/login" />}
     </QueryProvider>
   );
 }

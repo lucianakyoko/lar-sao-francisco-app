@@ -1,6 +1,6 @@
-import { Redirect, Tabs } from "expo-router";
+import { Redirect, router, Tabs } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
-import { useAuthStore } from "../../store/authStore";
+import { useAuthStore } from "@/store/authStore";
 
 import * as NavigationBar from "expo-navigation-bar";
 import { useEffect } from "react";
@@ -83,6 +83,7 @@ export default function AppLayout() {
           tabPress: (e) => {
             e.preventDefault();
             logout();
+            router.replace('/login')
           },
         }}
       />
