@@ -1,7 +1,29 @@
-import { View, Text, StyleSheet, ScrollView, Image } from 'react-native';
-import { DashboardSumaryCard } from '../../components/DashboardSumaryCard';
+import { View, Text, StyleSheet, ScrollView, Image, ActivityIndicator } from 'react-native';
+import { DashboardSumaryCard } from '@/components/DashboardSumaryCard';
+import { useDonationSummary } from '@/hooks/useDonationSummary';
 
 export default function Dashboard() {
+  const { data, isPending, error } = useDonationSummary();
+
+  if(isPending) {
+    return(
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color='#2b9eed' />
+        <Text>Carregando resumo...</Text>
+      </View>
+    )
+  }
+
+  if(error) {
+    return (
+      <View style={styles.errorContainer}>
+        <Text style={styles.errorText}>Erro ao carregar dados</Text>
+      </View>
+    );
+  }
+
+  const { totalDonationsAmount, totalDonors, totalAnimals } = data || {};
+  
   return (
     <ScrollView contentContainerStyle={styles.scrollContent}>
       <View style={styles.container}>
@@ -16,17 +38,16 @@ export default function Dashboard() {
         <View style={styles.sumaryContainer}>
           <DashboardSumaryCard 
             label='Doações recebidas'
-            value={'R$ 1564,70'}
+            value={`R$ ${totalDonationsAmount?.toFixed(2) || '0,00'}`}
           />
           <DashboardSumaryCard 
             label='Doadores'
-            value={'16'}
+            value={totalDonors?.toString() || '0'}
           />
           <DashboardSumaryCard 
             label='Animais cadastrados'
-            value={'47'}
+            value={totalAnimals?.toString() || '0'}
           />
-          
         </View>
       </View>
     </ScrollView>
@@ -78,5 +99,22 @@ const styles = StyleSheet.create({
   sumaryContainer: {
     width: '100%',
     marginTop: 32,
+  },
+
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  errorContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  errorText: {
+    color: 'red',
+    fontSize: 16,
+    textAlign: 'center',
   }
 });
