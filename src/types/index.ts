@@ -35,6 +35,8 @@ export interface Animal {
 export interface DonatedItem {
   itemId: string;
   quantity: number;
+  name: string;
+  value: number;
 }
 
 export interface CreateDonationDto {
@@ -47,9 +49,19 @@ export interface CreateDonationDto {
 export interface Donation {
   _id: string;
   donorName?: string;
+  totalDonation: number;
   animalId: string;
   donatedItems: DonatedItem[];
   extraAmount?: number;
   totalAmount?: number;
   createdAt: string;
+}
+
+export interface DonationGroup {
+  donationCount: number;
+  animal: Animal;
+  donations: Donation[];
+  totalExtraAmount: number;
+  totalDonatedItemsValue: number;
+  totalValue: number;
 }
