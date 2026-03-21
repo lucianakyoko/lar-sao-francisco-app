@@ -1,18 +1,24 @@
-import { View, Text, Image, StyleSheet } from "react-native";
+import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 
 type Props = {
   name: string;
   donationValue: number;
   imageUrl: string;
+  onPress?: () => void;
 };
 
 export function AnimalReceivedDonationCard({
   name,
   donationValue,
   imageUrl,
+  onPress
 }: Props) {
   return (
-    <View style={styles.card}>
+    <TouchableOpacity 
+      style={styles.card}
+      onPress={onPress}
+      activeOpacity={0.8}
+    >
       <Image source={{ uri: imageUrl }} style={styles.image} />
 
       <View style={styles.info}>
@@ -22,7 +28,7 @@ export function AnimalReceivedDonationCard({
           R$ {donationValue.toFixed(2).replace(".", ",")}
         </Text>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 }
 
@@ -31,30 +37,36 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "#E9ECEF",
+    gap: 20,
     borderRadius: 12,
     padding: 10,
     marginBottom: 12,
+    borderColor: '#d1d3d4',
+    borderWidth: 1,
   },
 
   image: {
-    width: 60,
-    height: 60,
+    width: 80,
+    height: 80,
     borderRadius: 10,
     marginRight: 12,
   },
 
   info: {
     flex: 1,
+    paddingVertical: 8,
+    height: 80,
+    justifyContent: 'space-between',
   },
 
   name: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: "600",
     marginBottom: 4,
   },
 
   value: {
-    fontSize: 14,
+    fontSize: 16,
     color: "#333",
   },
 });
