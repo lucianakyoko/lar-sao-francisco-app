@@ -61,7 +61,7 @@ export default function AppLayout() {
       />
 
       <Tabs.Screen
-        name="animals/index"
+        name="animals"
         options={{
           title: "Animais",
           tabBarIcon: ({ color }) => (
